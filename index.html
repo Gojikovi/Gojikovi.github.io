@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jakovleça</title>
+  <style>
+    @font-face {
+    font-family: 'roboto';
+    src: url(./roboto.woff2) format('woff2');
+	}
+    body {
+      background-color: #212529;
+      color: white;
+      font-family: roboto;
+    }
+    #input {
+      width: 300px;
+      height: 30px;
+    }
+    #output {
+      width: 300px;
+      height: 30px;
+      margin-top: 10px;
+    }
+	#copyButton {
+      margin-left: 10px;
+    }
+    table {
+      width: 400px;
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+    th, td {
+      text-align: left;
+      padding: 8px;
+      border: 1px solid #ddd;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+	Button {
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 20px;
+	}
+  </style>
+</head>
+<body>  
+  <h1>Transliteraçija russkoj kirilliçy v latiniçu Jakovleva</h1>
+  <label for="input">Vvedite tekst na kirilliçe:</label>
+  <input type="text" id="input">
+  <br>
+  <label for="output">Transliterirovannyj tekst:</label>
+  <input type="text" id="output" readonly>
+  </br></br>
+  <button id="clearButton">Ocistitj</button>
+  <button id="copyButton">Skopirovatj</button>
+  <script>
+    const input = document.getElementById('input');
+    const output = document.getElementById('output');
+	const copyButton = document.getElementById('copyButton')
+	const clearButton = document.getElementById('clearButton');
+
+    const transliterationMap = {
+      'а': 'a',
+      'б': 'b',
+      'в': 'v',
+      'г': 'g',
+      'д': 'd',
+      'е': 'e',
+      'ё': 'ö',
+      'ж': 'ƶ',
+      'з': 'z',
+      'и': 'i',
+      'й': 'j',
+      'к': 'k',
+      'л': 'l',
+      'м': 'm',
+      'н': 'n',
+      'о': 'o',
+      'п': 'p',
+      'р': 'r',
+      'с': 's',
+      'т': 't',
+      'у': 'u',
+      'ф': 'f',
+      'х': 'x',
+      'ц': 'ç',
+      'ч': 'c',
+      'ш': 'ş',
+      'щ': 'sc',
+      'ъ': '',
+      'ы': 'y',
+      'ь': 'j',
+      'э': 'e',
+      'ю': 'ü',
+      'я': 'ä',
+      'А': 'A',
+      'Б': 'B',
+      'В': 'V',
+      'Г': 'G',
+      'Д': 'D',
+      'Е': 'E',
+      'Ё': 'Ö',
+      'Ж': 'Ƶ',
+      'З': 'Z',
+      'И': 'I',
+      'Й': 'J',
+      'К': 'K',
+      'Л': 'L',
+      'М': 'M',
+      'Н': 'N',
+      'О': 'O',
+      'П': 'P',
+      'Р': 'R',
+      'С': 'S',
+      'Т': 'T',
+      'У': 'U',
+      'Ф': 'F',
+      'Х': 'X',
+      'Ц': 'Ç',
+      'Ч': 'C',
+      'Ш': 'Ş',
+      'Щ': 'Sc',
+      'Ъ': '',
+      'Ы': 'Y',
+      'Ь': 'J',
+      'Э': 'E',
+      'Ю': 'Ü',
+      'Я': 'Ä'
+    };
+
+    function transliterate(text) {
+      let result = '';
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        if (transliterationMap[char]) {
+          if (i === 0 || (i > 0 && /^[аеёиоуыэюя]+$/.test(text[i - 1].toLowerCase())) || (i > 0 && /^[аеёиоуыэюя]+$/.test(text[i - 1])) || (i > 0 && /[\.,\?!\s]+$/.test(text[i - 1]))) {
+            result += char === 'ю' ? 'ju' : char === 'я' ? 'ja' : char === 'е' ? 'je' : char === 'ё' ? 'jo' : char === 'Ю' ? 'Ju' : char === 'Я' ? 'Ja' : char === 'Е' ? 'Je' : char === 'Ё' ? 'Jo' : transliterationMap[char];
+          } else if (i > 0 && /щ|ч|ш|ж|Щ|Ч|Ш|Ж/.test(text[i - 1]) && char === 'ё' || char === 'Ё') {
+            result += 'o';
+          } else {
+            result += char === 'ю' ? 'ü' : char === 'я' ? 'ä' : char === 'Ю' ? 'Ü' : char === 'Я' ? 'Ä' : transliterationMap[char];
+          }
+        } else {
+          result += char;
+        }
+      }
+      return result;
+    }
+
+    input.addEventListener('input', () => {
+      output.value = transliterate(input.value);
+    });
+	
+	clearButton.addEventListener('click', () => {
+      input.value = '';
+      output.value = '';
+    });
+	
+	copyButton.addEventListener('click', () => {
+      output.select();
+      document.execCommand('copy');
+    });
+	
+  </script>
+  </br>
+  <table>
+    <tr>
+        <td>Kirilliça</td>
+        <td>Latiniça</td>
+    </tr>
+    <tr>
+        <td>Аа</td>
+        <td>Aa</td>
+    </tr>
+    <tr>
+        <td>Бб</td>
+        <td>Bb</td>
+    </tr>
+    <tr>
+        <td>Вв</td>
+        <td>Vv</td>
+    </tr>
+    <tr>
+        <td>Гг</td>
+        <td>Gg</td>
+    </tr>
+    <tr>
+        <td>Дд</td>
+        <td>Dd</td>
+    </tr>
+    <tr>
+        <td>Ее</td>
+        <td>je — v nacale slova i posle glasnyx,</br>e — posle soglasnyx</td>
+    </tr>
+    <tr>
+        <td>Ёё</td>
+        <td>jo — v nacale slova i posle glasnyx,</br>ö — posle soglasnyx,</br>o — posle şipäscix</td>
+    </tr>
+    <tr>
+        <td>Жж</td>
+        <td>Ƶƶ</td>
+    </tr>
+    <tr>
+        <td>Зз</td>
+        <td>Zz</td>
+    </tr>
+    <tr>
+        <td>Ии</td>
+        <td>Ii</td>
+    </tr>
+    <tr>
+        <td>Йй</td>
+        <td>Jj</td>
+    </tr>
+    <tr>
+        <td>Кк</td>
+        <td>Kk</td>
+    </tr>
+    <tr>
+        <td>Лл</td>
+        <td>Ll</td>
+    </tr>
+    <tr>
+        <td>Мм</td>
+        <td>Mm</td>
+    </tr>
+    <tr>
+        <td>Нн</td>
+        <td>Nn</td>
+    </tr>
+    <tr>
+        <td>Оо</td>
+        <td>Oo</td>
+    </tr>
+    <tr>
+        <td>Пп</td>
+        <td>Pp</td>
+    </tr>
+    <tr>
+        <td>Рр</td>
+        <td>Rr</td>
+    </tr>
+    <tr>
+        <td>Сс</td>
+        <td>Ss</td>
+    </tr>
+    <tr>
+        <td>Тт</td>
+        <td>Tt</td>
+    </tr>
+    <tr>
+        <td>Уу</td>
+        <td>Uu</td>
+    </tr>
+    <tr>
+        <td>Фф</td>
+        <td>Ff</td>
+    </tr>
+    <tr>
+        <td>Хх</td>
+        <td>Xx</td>
+    </tr>
+    <tr>
+        <td>Цц</td>
+        <td>Çç</td>
+    </tr>
+    <tr>
+        <td>Чч</td>
+        <td>Cc</td>
+    </tr>
+    <tr>
+        <td>Шш</td>
+        <td>Şş</td>
+    </tr>
+    <tr>
+        <td>Щщ</td>
+        <td>Sc sc</td>
+    </tr>
+    <tr>
+        <td>Ыы</td>
+        <td>Yy</td>
+    </tr>
+    <tr>
+        <td>Ьь</td>
+        <td>Jj</td>
+    </tr>
+    <tr>
+        <td>Ээ</td>
+        <td>Ee</td>
+    </tr>
+    <tr>
+        <td>Юю</td>
+        <td>ju — v nacale slova i posle glasnyx,</br>ü — posle soglasnyx</td>
+    </tr>
+    <tr>
+        <td>Яя</td>
+        <td>ja — v nacale slova i posle glasnyx,</br>ä — posle soglasnyx</td>
+    </tr>
+  </table>
+  
+</body>
+</html>
